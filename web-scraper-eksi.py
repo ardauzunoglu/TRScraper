@@ -3,7 +3,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-baslik = input("Entryleri çekeceğiniz başlık: ")
+baslik = input("Entrylerin çekileceği başlık: ")
 dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
 dosya_adi = dosya_adi + ".xlsx"
 entry_texts = []
