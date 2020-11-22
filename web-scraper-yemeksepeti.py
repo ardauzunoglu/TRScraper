@@ -67,9 +67,13 @@ yorum_uzunlugu = yorumlar_section.text
 yorum_uzunlugu = yorum_uzunlugu.replace("Yorumlar", "")
 yorum_uzunlugu = yorum_uzunlugu.replace("(","")
 yorum_uzunlugu = yorum_uzunlugu.replace(")","")
-yorum_uzunlugu = (int(yorum_uzunlugu) // 30) + 1
+yorum_uzunlugu = int(yorum_uzunlugu)
+if yorum_uzunlugu % 30 == 0:
+    yorum_uzunlugu = yorum_uzunlugu // 30
+else:
+    yorum_uzunlugu = (yorum_uzunlugu // 30) + 1
 
-while l < yorum_uzunlugu:
+while l <= yorum_uzunlugu:
 
     lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
     match = False
