@@ -3,7 +3,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-urun_adi = input("Değerlendirmeleri çekeceğiniz ürün adı: ")
+urun_adi = input("Değerlendirmelerin çekileceği ürün adı: ")
 dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
 dosya_adi = dosya_adi + ".xlsx"
 review_texts = []
@@ -147,13 +147,7 @@ while i <= review_page_count:
     i += 1
 
 driver.close()
-print(len(review_texts))
-print(len(review_useful))
-print(len(review_not_useful))
-print(len(date_texts))
-print(len(customer_name_texts))
-print(len(customer_age_texts))
-print(len(customer_province_texts))
+
 df = pd.DataFrame({"Değerlendirme: ":review_texts})
 
 if scrape_useful:
