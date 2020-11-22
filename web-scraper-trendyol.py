@@ -3,7 +3,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-urun_adi = "AvvaBisiklet Yaka Düz T-Shirt"
+urun_adi = input("Yorumların çekileceği ürün adı: ")
 dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
 dosya_adi = dosya_adi + ".xlsx"
 review_texts = []
