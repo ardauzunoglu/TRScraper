@@ -3,12 +3,12 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+restoran_info = input("Yorumların Çekileceği Restoran Adı: ")
+username_info = input("Yemeksepeti Kullanıcı Adı: ")
+password_info = input("Yemeksepeti Parola: ")
+sehir = input("Yemeksepeti Şehir: ")
 dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
 dosya_adi = dosya_adi + ".xlsx"
-restoran_info = "İçel Mersin Tantuni"
-username_info = "ardauzunogluarda@gmail.com"
-password_info = "ardaardaarda1"
-sehir = "eskisehir"
 yorum_texts = []
 author_texts = []
 date_texts = []
