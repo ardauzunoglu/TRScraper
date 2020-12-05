@@ -1,172 +1,204 @@
+import sys
 import time
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-urun_adi = input("Değerlendirmelerin çekileceği ürün adı: ")
-dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
-dosya_adi = dosya_adi + ".xlsx"
-review_texts = []
-review_useful = []
-review_not_useful = []
-customer_name_texts = []
-customer_province_texts = []
-customer_age_texts = []
-date_texts = []
-scrape_useful = True
-scrape_customer_name = True
-scrape_customer_province = True
-scrape_customer_age = True
-scrape_date = True
+def initialize():
 
-path = "C:\Program Files (x86)\chromedriver.exe"
+    global urun_adi, dosya_adi, delay, review_texts, review_useful, review_not_useful, customer_name_texts, customer_province_texts, customer_age_texts, date_texts, scrape_useful, scrape_customer_name, scrape_customer_province, scrape_customer_age, scrape_date, path
 
-driver = webdriver.Chrome(path)
+    urun_adi = input("Değerlendirmelerin çekileceği ürün adı: ")
+    dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
+    dosya_adi = dosya_adi + ".xlsx"
+    delay = int(input("Bekleme süresi: "))
 
-time.sleep(1)
+    review_texts = []
+    review_useful = []
+    review_not_useful = []
+    customer_name_texts = []
+    customer_province_texts = []
+    customer_age_texts = []
+    date_texts = []
 
-driver.get("https://www.hepsiburada.com")
+    scrape_useful = True
+    scrape_customer_name = True
+    scrape_customer_province = True
+    scrape_customer_age = True
+    scrape_date = True
 
-time.sleep(1)
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
-driver.maximize_window()
+def scrape():
+    try:
+        driver = webdriver.Chrome(path)
+        time.sleep(delay)
 
-time.sleep(1)
+    except:
+        print("Chromedriver kullanılamıyor.")
+        sys.exit()
 
-arama_bari = driver.find_element_by_class_name("desktopOldAutosuggestTheme-input")
-arama_bari.send_keys(urun_adi)
-arama_bari.send_keys(Keys.ENTER)
+    try: 
+        driver.get("https://www.hepsiburada.com")
+        time.sleep(delay)
+        driver.maximize_window()
+        time.sleep(delay)
 
-time.sleep(1)
+    except:
+        print("Hepsiburada'ya erişilemiyor.")
+        sys.exit()
 
-urun = driver.find_element_by_class_name("search-item")
-urun.click()
+    try:
+        arama_bari = driver.find_element_by_class_name("desktopOldAutosuggestTheme-input")
+        arama_bari.send_keys(urun_adi)
+        arama_bari.send_keys(Keys.ENTER)
+        time.sleep(delay)
+        urun = driver.find_element_by_class_name("search-item")
+        urun.click()
+        time.sleep(delay)
 
-time.sleep(1)
+    except:
+        print("Ürün bulunamadı.")
+        sys.exit()
 
-review_count = driver.find_element_by_id("productReviewsTab").text
-review_count = review_count.replace("Değerlendirmeler ", "")
-review_count = review_count.replace("(","")
-review_count = review_count.replace(")","")
-review_count = int(review_count)
-review_page_count = (review_count // 10) + 1
+    try:
+        review_count = driver.find_element_by_id("productReviewsTab").text
+        review_count = review_count.replace("Değerlendirmeler ", "")
+        review_count = review_count.replace("(","")
+        review_count = review_count.replace(")","")
+        review_count = int(review_count)
+        review_page_count = (review_count // 10) + 1
 
-constant_url = driver.current_url
-try:
-    index_of_question_mark = constant_url.index("?")
-    constant_url = constant_url[:index_of_question_mark]
-except:
-    pass
+        constant_url = driver.current_url
 
-i = 1
-while i <= review_page_count:
-    url = constant_url + "-yorumlari?sayfa=" + str(i)
-    driver.get(url)
+    except:
+        print("İnceleme bulunamadı.")
+        sys.exit()
 
-    review_cards = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//div[@itemprop='review']")
+    try:
+        index_of_question_mark = constant_url.index("?")
+        constant_url = constant_url[:index_of_question_mark]
 
-    reviews = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//span[@itemprop='description']")
-    for review in reviews:
-        review = review.text
-        review_texts.append(review)
+    except:
+        pass
 
-    customer_names = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//span[@itemprop='author']")
-    for customer_name in customer_names:
-        customer_name = customer_name.text
-        customer_name_texts.append(customer_name)
+    i = 1
+    while i <= review_page_count:
 
-    customer_ages = driver.find_elements_by_xpath("//*[@class='hermes-ReviewCard-module-1-Wp3']//span[2]")
-    for customer_age in customer_ages:
-        customer_age = customer_age.text
-        customer_age = customer_age.replace("(", "")
-        customer_age = customer_age.replace(")", "")
-        if customer_age == "":
-            customer_age = "Boş"
-        customer_age_texts.append(customer_age)
+        url = constant_url + "-yorumlari?sayfa=" + str(i)
+        driver.get(url)
 
-    customer_provinces = driver.find_elements_by_xpath("//*[@class='hermes-ReviewCard-module-1-Wp3']//span[3]")
-    for customer_province in customer_provinces:
-        customer_province = customer_province.text
-        customer_province = customer_province.replace("-", "")
-        customer_province = customer_province.replace(" ", "")
-        customer_province_texts.append(customer_province)
+        reviews = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//span[@itemprop='description']")
+        for review in reviews:
+            review = review.text
+            review_texts.append(review)
 
-    dates = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//span[@itemprop='datePublished']")
-    for date in dates:
-        date = date.text
-        date = date.replace(",", "")
-        date = date.split()
-        day_abbr = ["Pts", "Sal", "Çar", "Per", "Cum", "Cts", "Paz"]
-        day_conv = {
-            "Pts":"Pazartesi",
-            "Sal":"Salı",
-            "Çar":"Çarşamba",
-            "Per":"Perşembe",
-            "Cum":"Cuma",
-            "Cts":"Cumartesi",
-            "Paz":"Pazar",
-            "Pazartesi":"Pazartesi",
-            "Salı":"Salı",
-            "Çarşamba":"Çarşamba",
-            "Perşembe":"Perşembe",
-            "Cuma":"Cuma",
-            "Cumartesi":"Cumartesi",
-            "Pazar":"Pazar"
-        }
-        years = ["2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000"]
-        if date[2] not in years:
-            date.insert(2, "2020")
-        date[-1] = day_conv[date[-1]]
-        date = " ".join(date)
-        date_texts.append(date)
+        customer_names = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//span[@itemprop='author']")
+        for customer_name in customer_names:
+            customer_name = customer_name.text
+            customer_name_texts.append(customer_name)
 
-    usefuls = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//button[@class='hermes-ReviewCard-module-1MoiF']")
-    not_usefuls = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//button[@class='hermes-ReviewCard-module-39K0Y']")
+        customer_ages = driver.find_elements_by_xpath("//*[@class='hermes-ReviewCard-module-1-Wp3']//span[2]")
+        for customer_age in customer_ages:
+            customer_age = customer_age.text
+            customer_age = customer_age.replace("(", "")
+            customer_age = customer_age.replace(")", "")
 
-    for useful in usefuls:
-        useful = useful.text
-        useful = useful.replace("Evet", "")
-        useful = useful.replace("(", "")
-        useful = useful.replace(")", "")
-        review_useful.append(useful)
-    
-    for not_useful in not_usefuls:
-        not_useful = not_useful.text
-        not_useful = not_useful.replace("Hayır", "")
-        not_useful = not_useful.replace("(", "")
-        not_useful = not_useful.replace(")", "")
-        review_not_useful.append(not_useful)
+            if customer_age == "":
+                customer_age = "Boş"
 
-    while len(review_useful) < len(date_texts):
-        review_useful.append("0")
-        review_not_useful.append("0")
+            customer_age_texts.append(customer_age)
 
-    while len(review_texts) < len(date_texts):
-        review_texts.append("Boş")
+        customer_provinces = driver.find_elements_by_xpath("//*[@class='hermes-ReviewCard-module-1-Wp3']//span[3]")
+        for customer_province in customer_provinces:
+            customer_province = customer_province.text
+            customer_province = customer_province.replace("-", "")
+            customer_province = customer_province.replace(" ", "")
+            customer_province_texts.append(customer_province)
 
-    i += 1
+        dates = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//span[@itemprop='datePublished']")
+        for date in dates:
+            date = date.text
+            date = date.replace(",", "")
+            date = date.split()
 
-driver.close()
+            day_conv = {
+                "Pts":"Pazartesi",
+                "Sal":"Salı",
+                "Çar":"Çarşamba",
+                "Per":"Perşembe",
+                "Cum":"Cuma",
+                "Cts":"Cumartesi",
+                "Paz":"Pazar",
+                "Pazartesi":"Pazartesi",
+                "Salı":"Salı",
+                "Çarşamba":"Çarşamba",
+                "Perşembe":"Perşembe",
+                "Cuma":"Cuma",
+                "Cumartesi":"Cumartesi",
+                "Pazar":"Pazar"
+            }
 
-df = pd.DataFrame({"Değerlendirme: ":review_texts})
+            years = ["2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005", "2004", "2003", "2002", "2001", "2000"]
 
-if scrape_useful:
-    df["Değerlendirmeyi Yararlı Bulanlar"] = review_useful
-    df["Değerlendirmeyi Yararlı Bulmayanlar"] = review_not_useful
+            if date[2] not in years:
+                date.insert(2, "2020")
 
-if scrape_date:
-    df["Değerlendirme Tarihi:"] = date_texts
+            date[-1] = day_conv[date[-1]]
+            date = " ".join(date)
+            date_texts.append(date)
 
-if scrape_customer_name:
-    df["Müşterinin Adı Soyadı"] = customer_name_texts
+        usefuls = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//button[@class='hermes-ReviewCard-module-1MoiF']")
+        not_usefuls = driver.find_elements_by_xpath("//*[@id='hermes-voltran-comments']//button[@class='hermes-ReviewCard-module-39K0Y']")
 
-if scrape_customer_age:
-    df["Müşterinin Yaşı"] = customer_age_texts
+        for useful in usefuls:
+            useful = useful.text
+            useful = useful.replace("Evet", "")
+            useful = useful.replace("(", "")
+            useful = useful.replace(")", "")
+            review_useful.append(useful)
+        
+        for not_useful in not_usefuls:
+            not_useful = not_useful.text
+            not_useful = not_useful.replace("Hayır", "")
+            not_useful = not_useful.replace("(", "")
+            not_useful = not_useful.replace(")", "")
+            review_not_useful.append(not_useful)
 
-if scrape_customer_province:
-    df["Müşterinin Konumu"] = customer_province_texts
+        while len(review_useful) < len(date_texts):
+            review_useful.append("0")
+            review_not_useful.append("0")
 
-df.to_excel(dosya_adi, header = True, index = False)
+        while len(review_texts) < len(date_texts):
+            review_texts.append("Boş")
 
-x = "Çektiğiniz veriler "+ dosya_adi + " adlı excel dosyasına kaydedildi."
-print(x)
+        i += 1
+
+    driver.close()
+
+    df = pd.DataFrame({"Değerlendirme: ":review_texts})
+
+    if scrape_useful:
+        df["Değerlendirmeyi Yararlı Bulanlar"] = review_useful
+        df["Değerlendirmeyi Yararlı Bulmayanlar"] = review_not_useful
+
+    if scrape_date:
+        df["Değerlendirme Tarihi:"] = date_texts
+
+    if scrape_customer_name:
+        df["Müşterinin Adı Soyadı"] = customer_name_texts
+
+    if scrape_customer_age:
+        df["Müşterinin Yaşı"] = customer_age_texts
+
+    if scrape_customer_province:
+        df["Müşterinin Konumu"] = customer_province_texts
+
+    df.to_excel(dosya_adi, header = True, index = False)
+
+    x = "Çektiğiniz veriler "+ dosya_adi + " adlı excel dosyasına kaydedildi."
+    print(x)
+
+if __name__ == "__main__":
+    initialize()
+    scrape()
