@@ -28,7 +28,8 @@ def initialize():
     scrape_speed = True
     scrape_service = True
     scrape_flavour = True
-    path = "C:\Program Files (x86)\chromedriver.exe"
+    
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
     tr_chars = ["ğ", "ş", "ı", "ü", "ö", "ç"]
     tr2eng = {
