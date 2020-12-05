@@ -1,6 +1,6 @@
+import sys
 import time
 import pandas as pd
-import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -12,12 +12,15 @@ def initialize():
     dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
     dosya_adi = dosya_adi + ".xlsx"
     delay = int(input("Bekleme süresi: "))
+
     entry_texts = []
     author_texts = []
     date_texts = []
+
     scrape_author = True
     scrape_date = True
-    path = "BURAYA CHROMEDRIVER UZANTISINI GİRİNİZ"
+
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
 def scrape():
     try:
@@ -35,8 +38,9 @@ def scrape():
         time.sleep(delay)
 
     except:
-        print("Ekşi sözlüğe erişilemiyor.")
+        print("Ekşi Sözlük'e erişilemiyor.")
         sys.exit()
+
     try:
         arama_bari = driver.find_element_by_id("search-textbox")
         arama_bari.send_keys(baslik)
