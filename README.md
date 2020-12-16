@@ -8,26 +8,26 @@
   
 ### Gereksinimler
 
-> Chromedriver'ın indirilmesi gerekmektedir. İndirme tamamlandıktan sonra '.py' uzantılı dosyalar içerisindeki path değişkenine Chromedriver'ın uzantısı atamalısınız. 
+> Chromedriver'ın indirilmesi gerekmektedir. İndirme tamamlandıktan sonra '.py' uzantılı dosyalar içerisindeki path değişkenine Chromedriver'ın uzantısı atamalısınız. <br>
 [ChromeDriver'ı İndir](https://chromedriver.storage.googleapis.com/index.html?path=84.0.4147.30/)
 
 ### v1.0 Versiyonunda Kullanılabilen Güncel Platformlar
 
-Beyazperde [Beyazperde Rehberi](https://youtu.be/DjEZiUGOnAo)
-Ekşi Sözlük [Ekşi Sözlük Rehberi](https://youtu.be/4UbBPghlB_g)
-Hepsiburada [Hepsiburada Rehberi](https://youtu.be/brK3WOe02J8) 
-Kitapyurdu [Kitapyurdu Rehberi](https://youtu.be/GE3UVOD35is) 
-Trendyol [Trendyol Rehberi](https://youtu.be/pbbj2BadN7Y)
-Yemeksepeti [Yemeksepeti Rehberi](https://youtu.be/dDTxDzO2TTg) 
-Youtube [Youtube Rehberi](https://youtu.be/NnSaqihGqq8
+Beyazperde [Beyazperde Rehberi](https://youtu.be/DjEZiUGOnAo) <br>
+Ekşi Sözlük [Ekşi Sözlük Rehberi](https://youtu.be/4UbBPghlB_g) <br>
+Hepsiburada [Hepsiburada Rehberi](https://youtu.be/brK3WOe02J8) <br>
+Kitapyurdu [Kitapyurdu Rehberi](https://youtu.be/GE3UVOD35is) <br>
+Trendyol [Trendyol Rehberi](https://youtu.be/pbbj2BadN7Y) <br>
+Yemeksepeti [Yemeksepeti Rehberi](https://youtu.be/dDTxDzO2TTg) <br>
+Youtube [Youtube Rehberi](https://youtu.be/NnSaqihGqq8) <br>
 
 ### Geliştirme Aşamasında Olan Özellikler
 
-Çeşitli Platformlar 
-Arayüz
-Kullanılabilir Drive Sayısını Arttırma
+Çeşitli Platformlar <br>
+Arayüz <br>
+Kullanılabilir Drive Sayısını Arttırma <br>
 
 ### Geliştirici
 
-[Gihub Hesabı](https://github.com/ardauzunoglu) 
-[LinkedIn Hesabı](https://www.linkedin.com/in/arda-uzunoğlu/)
+[Gihub Hesabı](https://github.com/ardauzunoglu) <br>
+[LinkedIn Hesabı](https://www.linkedin.com/in/arda-uzunoğlu/) <br>
