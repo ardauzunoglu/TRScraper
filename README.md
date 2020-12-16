@@ -28,7 +28,7 @@ Youtube - [Rehber](https://youtu.be/NnSaqihGqq8) <br>
 - Arayüz <br>
 - Kullanılabilir Drive Sayısını Arttırma <br>
 
-### Galeri 
+### Galeri - Ekşi Sözlük Örneği
 
 ![1](https://user-images.githubusercontent.com/48959682/102391426-c11f1600-3fe6-11eb-9557-e693184c38e7.png)
 ![2](https://user-images.githubusercontent.com/48959682/102391595-fcb9e000-3fe6-11eb-910d-c440e042a12c.png)
