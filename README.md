@@ -23,9 +23,9 @@ Youtube - [Rehber](https://youtu.be/NnSaqihGqq8) <br>
 
 ### Geliştirme Aşamasında Olan Özellikler
 
-Çeşitli Platformlar <br>
-Arayüz <br>
-Kullanılabilir Drive Sayısını Arttırma <br>
+- Çeşitli Platformlar <br>
+- Arayüz <br>
+- Kullanılabilir Drive Sayısını Arttırma <br>
 
 ### Geliştirici
 
