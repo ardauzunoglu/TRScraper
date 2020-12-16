@@ -13,13 +13,13 @@
 
 ### v1.0 Versiyonunda Kullanılabilen Güncel Platformlar
 
-Beyazperde - [Rehberi](https://youtu.be/DjEZiUGOnAo) <br>
-Ekşi Sözlük - [Rehberi](https://youtu.be/4UbBPghlB_g) <br>
-Hepsiburada - [Rehberi](https://youtu.be/brK3WOe02J8) <br>
-Kitapyurdu - [Rehberi](https://youtu.be/GE3UVOD35is) <br>
-Trendyol - [Rehberi](https://youtu.be/pbbj2BadN7Y) <br>
-Yemeksepeti - [Rehberi](https://youtu.be/dDTxDzO2TTg) <br>
-Youtube - [Rehberi](https://youtu.be/NnSaqihGqq8) <br>
+Beyazperde - [Rehber](https://youtu.be/DjEZiUGOnAo) <br>
+Ekşi Sözlük - [Rehber](https://youtu.be/4UbBPghlB_g) <br>
+Hepsiburada - [Rehber](https://youtu.be/brK3WOe02J8) <br>
+Kitapyurdu - [Rehber](https://youtu.be/GE3UVOD35is) <br>
+Trendyol - [Rehber](https://youtu.be/pbbj2BadN7Y) <br>
+Yemeksepeti - [Rehber](https://youtu.be/dDTxDzO2TTg) <br>
+Youtube - [Rehber](https://youtu.be/NnSaqihGqq8) <br>
 
 ### Geliştirme Aşamasında Olan Özellikler
 
@@ -29,5 +29,5 @@ Kullanılabilir Drive Sayısını Arttırma <br>
 
 ### Geliştirici
 
-[Gihub Hesabı](https://github.com/ardauzunoglu) <br>
-[LinkedIn Hesabı](https://www.linkedin.com/in/arda-uzunoğlu/) <br>
+Github Hesabım: [ardauzunoglu](https://github.com/ardauzunoglu) <br>
+LinkedIn Hesabım: [Arda Uzunoğlu](https://www.linkedin.com/in/arda-uzunoğlu/) <br>
