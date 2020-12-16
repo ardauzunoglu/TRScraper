@@ -13,13 +13,13 @@
 
 ### v1.0 Versiyonunda Kullanılabilen Güncel Platformlar
 
-Beyazperde [Beyazperde Rehberi](https://youtu.be/DjEZiUGOnAo) <br>
-Ekşi Sözlük [Ekşi Sözlük Rehberi](https://youtu.be/4UbBPghlB_g) <br>
-Hepsiburada [Hepsiburada Rehberi](https://youtu.be/brK3WOe02J8) <br>
-Kitapyurdu [Kitapyurdu Rehberi](https://youtu.be/GE3UVOD35is) <br>
-Trendyol [Trendyol Rehberi](https://youtu.be/pbbj2BadN7Y) <br>
-Yemeksepeti [Yemeksepeti Rehberi](https://youtu.be/dDTxDzO2TTg) <br>
-Youtube [Youtube Rehberi](https://youtu.be/NnSaqihGqq8) <br>
+Beyazperde - [Rehberi](https://youtu.be/DjEZiUGOnAo) <br>
+Ekşi Sözlük - [Rehberi](https://youtu.be/4UbBPghlB_g) <br>
+Hepsiburada - [Rehberi](https://youtu.be/brK3WOe02J8) <br>
+Kitapyurdu - [Rehberi](https://youtu.be/GE3UVOD35is) <br>
+Trendyol - [Rehberi](https://youtu.be/pbbj2BadN7Y) <br>
+Yemeksepeti - [Rehberi](https://youtu.be/dDTxDzO2TTg) <br>
+Youtube - [Rehberi](https://youtu.be/NnSaqihGqq8) <br>
 
 ### Geliştirme Aşamasında Olan Özellikler
 
