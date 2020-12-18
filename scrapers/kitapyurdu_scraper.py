@@ -192,24 +192,27 @@ def scrape():
         except:
             time.sleep(delay)
 
-    kisa = min(len(author_texts), len(date_texts), len(review_useful), len(review_not_useful))
+    kisa = [len(review_texts), len(author_texts), len(date_texts), len(review_useful), len(review_not_useful)]
+    kisa = min(kisa)
     kisa -= 1
 
-    columns = [author_texts, date_texts, review_useful, review_not_useful]
-    for column in columns:
-        column = column[:kisa]
+    review_texts_fin = review_texts[:kisa]
 
-    df = pd.DataFrame({"Yorumlar": review_texts})
+    df = pd.DataFrame({"Yorumlar": review_texts_fin})
 
     if scrape_author:
-        df["Müşteriler"] = author_texts
+        author_texts_fin = author_texts[:kisa]
+        df["Müşteriler"] = author_texts_fin
 
     if scrape_date:
-        df["İnceleme Tarihi"] = date_texts
+        date_texts_fin = date_texts[:kisa]
+        df["İnceleme Tarihi"] = date_texts_fin
 
     if scrape_useful:
-        df["İncelemeyi Yararlı Bulan Kişi Sayısı"] = review_useful
-        df["İncelemeyi Yararlı Bulmayan Kişi Sayısı"] = review_not_useful
+        review_useful_fin = review_useful[:kisa]
+        review_not_useful_fin = review_not_useful[:kisa]
+        df["İncelemeyi Yararlı Bulan Kişi Sayısı"] = review_useful_fin
+        df["İncelemeyi Yararlı Bulmayan Kişi Sayısı"] = review_not_useful_fin
 
     df.to_excel(dosya_adi, header = True, index = False)
 
