@@ -152,18 +152,29 @@ def scrape():
 
         l += 1
 
-    df = pd.DataFrame({"Yorumlar":comment_texts})
+    driver.close()
+
+    kisa = [len(comment_texts), len(author_texts), len(date_texts), len(like_texts), len(title_text)]
+    kisa = min(kisa)
+    kisa -= 1
+
+    comment_texts_fin = comment_texts[:kisa]
+    df = pd.DataFrame({"Yorumlar":comment_texts_fin})
     if scrape_authors:
-        df["Kullanıcı"] = author_texts
+        author_texts_fin = author_texts[:kisa]
+        df["Kullanıcı"] = author_texts_fin
 
     if scrape_dates:
-        df["Yorum Tarihi"] =  date_texts
+        date_texts_fin = date_texts[:kisa]
+        df["Yorum Tarihi"] =  date_texts_fin
     
     if scrape_likes:
-        df["Yorumun Aldığı Beğeni Sayısı"] =  like_texts
+        like_texts_fin = like_texts[:kisa]
+        df["Yorumun Aldığı Beğeni Sayısı"] =  like_texts_fin
        
     if scrape_title:
-        df["Video Başlığı"] =  title_text
+        title_text_fin = title_text[:kisa]
+        df["Video Başlığı"] = title_text_fin
 
     df.to_excel(dosya_adi, header = True, index = False)
     x = "Çektiğiniz veriler " + dosya_adi + " adlı excel dosyasına kaydedildi."

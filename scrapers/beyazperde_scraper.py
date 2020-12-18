@@ -209,22 +209,31 @@ def scrape():
         driver.get(url)
 
     driver.close()
+    
+    kisa = [len(review_texts), len(member_name_texts), len(date_texts), len(review_useful), len(review_not_useful)]
+    kisa = min(kisa)
+    kisa -= 1
 
-    df = pd.DataFrame({"İncelemeler":review_texts})
+    review_texts_fin = review_texts[:kisa]
+    df = pd.DataFrame({"İncelemeler":review_texts_fin})
 
     if scrape_useful:
-        df["İncelemeyi Yararlı Bulanlar"] = review_useful
-        df["İncelemeyi Yararlı Bulmayanlar"] = review_not_useful
+        review_useful_fin = review_useful[:kisa]
+        review_not_useful_fin = review_not_useful[:kisa]
+        df["İncelemeyi Yararlı Bulanlar"] = review_useful_fin
+        df["İncelemeyi Yararlı Bulmayanlar"] = review_not_useful_fin
 
     if scrape_scores:
-        review_scores_limited = review_scores[:len(review_texts)]
-        df["İnceleme Puanları"] = review_scores_limited
+        review_scores_fin = review_scores[:kisa]
+        df["İnceleme Puanları"] = review_scores_fin
 
     if scrape_member_name:
-        df["İncelemeyi Yayınlayan Kişi"] = member_name_texts
+        member_name_texts_fin = member_name_texts[:kisa]
+        df["İncelemeyi Yayınlayan Kişi"] = member_name_texts_fin
 
     if scrape_date:
-        df["İncelemenin Yayınlanma Tarihi"] = date_texts
+        date_texts_fin = date_texts[:kisa]
+        df["İncelemenin Yayınlanma Tarihi"] = date_texts_fin
 
     df.to_excel(dosya_adi, header = True, index = False)
 

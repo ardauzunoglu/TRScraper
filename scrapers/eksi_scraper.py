@@ -151,14 +151,20 @@ def scrape():
                     pass
 
         driver.close()
+        kisa = [len(entry_texts), len(author_texts), len(date_texts)]
+        kisa = min(kisa)
+        kisa -= 1
 
-        df = pd.DataFrame({"Entryler": entry_texts})
+        entry_texts_fin = entry_texts[:kisa]
+        df = pd.DataFrame({"Entryler": entry_texts_fin})
 
         if scrape_date:
-            df["Tarihler"] = date_texts
+            date_texts_fin = date_texts[:kisa]
+            df["Tarihler"] = date_texts_fin
 
         if scrape_author:
-            df["Yazarlar"] = author_texts
+            author_texts_fin = author_texts[:kisa]
+            df["Yazarlar"] = author_texts_fin
 
         df.to_excel(dosya_adi, header = True, index = False)
 

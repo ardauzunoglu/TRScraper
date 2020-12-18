@@ -16,7 +16,8 @@ def initialize():
     global restoran_info, username_info, password_info, sehir, dosya_adi, delay, yorum_texts, author_texts, date_texts, speed_ratings, service_ratings, flavour_ratings, scrape_author, scrape_date, scrape_speed, scrape_service, scrape_flavour, path
 
     restoran_info = input("Yorumların Çekileceği Restoran: ")
-    username_info = "ardauzunogluarda@gmail.com"
+    username_info = input("Yemeksepeti kullanıcı adı: ")
+    password_info = input("Yemeksepeti parola: ")
     password_info = "ardaardaarda1"
     sehir = input("Yemeksepeti Şehir: ")
     dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")

@@ -167,16 +167,24 @@ def scrape():
 
     driver.close()
 
-    df = pd.DataFrame({"Yorum": review_texts})
+    kisa = [len(review_texts), len(customer_name_texts), len(date_texts), len(review_useful)]
+    kisa = min(kisa)
+    kisa -= 1
+
+    review_texts_fin = review_texts[:kisa]
+    df = pd.DataFrame({"Yorum": review_texts_fin})
 
     if scrape_useful:
-        df["Yorum Beğeni Sayısı"] = review_useful
+        review_useful_fin = review_useful[:kisa]
+        df["Yorum Beğeni Sayısı"] = review_useful_fin
 
     if scrape_customer_name:
-        df["Yorum Yazan Müşteri"] = customer_name_texts
+        customer_name_texts_fin = customer_name_texts[:kisa]
+        df["Yorum Yazan Müşteri"] = customer_name_texts_fin
 
     if scrape_date:
-        df["Yorumun Yazıldığı Tarih"] = date_texts
+        date_texts_fin = date_texts[:kisa]
+        df["Yorumun Yazıldığı Tarih"] = date_texts_fin
 
     df.to_excel(dosya_adi, header = True, index = False)
 

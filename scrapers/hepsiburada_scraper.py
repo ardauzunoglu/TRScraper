@@ -258,24 +258,34 @@ def scrape():
         i += 1
 
     driver.close()
-
-    df = pd.DataFrame({"Değerlendirme: ":review_texts})
+    kisa = [len(review_texts), len(review_useful), len(review_not_useful), len(date_texts), len(customer_name_texts), len(customer_age_texts), len(customer_province_texts)]
+    kisa = min(kisa)
+    kisa -= 1
+    
+    review_texts_fin = review_texts[:kisa]
+    df = pd.DataFrame({"Değerlendirme: ":review_texts_fin})
 
     if scrape_useful:
-        df["Değerlendirmeyi Yararlı Bulanlar"] = review_useful
-        df["Değerlendirmeyi Yararlı Bulmayanlar"] = review_not_useful
+        review_useful_fin = review_useful[:kisa]
+        review_not_useful_fin = review_not_useful[:kisa]
+        df["Değerlendirmeyi Yararlı Bulanlar"] = review_useful_fin
+        df["Değerlendirmeyi Yararlı Bulmayanlar"] = review_not_useful_fin
 
     if scrape_date:
-        df["Değerlendirme Tarihi:"] = date_texts
+        date_texts_fin = date_texts[:kisa]
+        df["Değerlendirme Tarihi:"] = date_texts_fin
 
     if scrape_customer_name:
-        df["Müşterinin Adı Soyadı"] = customer_name_texts
+        customer_name_texts_fin = customer_name_texts[:kisa]
+        df["Müşterinin Adı Soyadı"] = customer_name_texts_fin
 
     if scrape_customer_age:
-        df["Müşterinin Yaşı"] = customer_age_texts
+        customer_age_texts_fin = customer_age_texts[:kisa]
+        df["Müşterinin Yaşı"] = customer_age_texts_fin
 
     if scrape_customer_province:
-        df["Müşterinin Konumu"] = customer_province_texts
+        customer_province_texts_fin = customer_province_texts[:kisa]
+        df["Müşterinin Konumu"] = customer_province_texts_fin
 
     df.to_excel(dosya_adi, header = True, index = False)
 
