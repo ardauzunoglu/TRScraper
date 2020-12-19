@@ -71,7 +71,7 @@ def initialize():
             scrape_date_input = input("İnceleme tarihleri çekilsin mi(y/n): ")
             print("\n")
 
-    path = "C:\Program Files (x86)\chromedriver.exe"
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
 def scrape():
     try:

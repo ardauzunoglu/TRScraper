@@ -106,7 +106,7 @@ def initialize():
             scrape_flavour_input = input("İnceleme lezzet puanı çekilsin mi(y/n): ")
             print("\n")
     
-    path = "C:\Program Files (x86)\chromedriver.exe"
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
     tr_chars = ["ğ", "ş", "ı", "ü", "ö", "ç"]
     tr2eng = {

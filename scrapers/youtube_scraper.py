@@ -80,7 +80,7 @@ def initialize():
             scrape_likes_input = input("Yorumun aldığı beğeni sayısı çekilsin mi(y/n): ")
             print("\n")
 
-    path = "C:\Program Files (x86)\chromedriver.exe"
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
 def scrape():
     comment_texts = []

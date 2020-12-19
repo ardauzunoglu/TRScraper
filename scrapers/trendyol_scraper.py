@@ -75,7 +75,7 @@ def initialize():
     scrape_customer_name = True
     scrape_date = True
 
-    path = "C:\Program Files (x86)\chromedriver.exe"
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
 def scrape():
     try:

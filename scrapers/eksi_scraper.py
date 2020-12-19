@@ -16,7 +16,7 @@ def initialize():
 
     global path
 
-    path = "C:\Program Files (x86)\chromedriver.exe"
+    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
 def scrape():
     def spesific_initialize():
