@@ -5,27 +5,36 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 
-def initialize():
+def eksisozluk_scrape():
+    def initialize():
+        def preference(scrape_input):
+            while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
+                if scrape_input.lower() == "y":
+                    output = True
+                    break
 
-    print("""
-        ---------------------------------------------------------
-        -         Ekşi Sözlük Scraper'a hoş geldiniz!           -
-        -         Geliştirici: Arda Uzunoğlu                    -
-        ---------------------------------------------------------
-    """)
+                elif scrape_input.lower() == "n":
+                    output = False
+                    break
 
-    global path
+                else:
+                    print("Geçersiz yanıt.")
+                    scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
 
-    path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
+            return output
 
-def scrape():
-    def spesific_initialize():
+        print("""
+            ---------------------------------------------------------
+            -         Ekşi Sözlük Scraper'a hoş geldiniz!           -
+            -         Geliştirici: Arda Uzunoğlu                    -
+            ---------------------------------------------------------
+        """)
 
-        global baslik, dosya_adi, delay, entry_texts, author_texts, date_texts, scrape_author_input, scrape_date_input, scrape_author, scrape_date
+        global title, file, delay, entry_texts, author_texts, date_texts, scrape_author_input, scrape_date_input, scrape_author, scrape_date, path
 
-        baslik = input("Entrylerin çekileceği başlık: ")
-        dosya_adi = input("Oluşturulacak Excel dosyasının adı: ")
-        dosya_adi = dosya_adi + ".xlsx"
+        title = input("Entrylerin çekileceği başlık: ")
+        file = input("Oluşturulacak Excel dosyasının adı: ")
+        file = file + ".xlsx"
         delay = int(input("Bekleme süresi(sn): "))
 
         entry_texts = []
@@ -33,36 +42,14 @@ def scrape():
         date_texts = []
 
         scrape_author_input = input("Yazar isimleri çekilsin mi(y/n): ")
-        while (scrape_author_input.lower() != "y") or (scrape_author_input.lower() != "n"):
-            if scrape_author_input.lower() == "y":
-                scrape_author = True
-                break
-
-            elif scrape_author_input.lower() == "n":
-                scrape_author = False
-                break
-
-            else:
-                print("Geçersiz yanıt.")
-                scrape_author_input = input("Yazar isimleri çekilsin mi(y/n): ")
-                print("\n")
-
         scrape_date_input = input("Entry tarihleri çekilsin mi(y/n): ")
-        while (scrape_date_input.lower() != "y") or (scrape_date_input.lower() != "n"):
-            if scrape_date_input.lower() == "y":
-                scrape_date = True
-                break
 
-            elif scrape_date_input.lower() == "n":
-                scrape_date = False
-                break
+        scrape_author = preference(scrape_author_input)
+        scrape_date = preference(scrape_date_input)
 
-            else:
-                print("Geçersiz yanıt.")
-                scrape_date_input = input("Entry tarihleri çekilsin mi(y/n): ")
-                print("\n")
+        path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
-    def spesific_scrape():
+    def scrape():
         try:
             print("Chromedriver'a erişiliyor...")
             driver = webdriver.Chrome(path)
@@ -88,7 +75,7 @@ def scrape():
         try:
             print("Başlık aranıyor...")
             arama_bari = driver.find_element_by_id("search-textbox")
-            arama_bari.send_keys(baslik)
+            arama_bari.send_keys(title)
             arama_bari.send_keys(Keys.ENTER)
             time.sleep(delay)
             print("Başlık bulundu.")
@@ -114,15 +101,13 @@ def scrape():
             time.sleep(delay)
 
             entries = driver.find_elements_by_css_selector(".content")
-
             for entry in entries:
                 entry = entry.text
                 entry_texts.append(entry)
 
             time.sleep(delay)
 
-            dates = driver.find_elements_by_class_name("entry-date")
-                        
+            dates = driver.find_elements_by_class_name("entry-date")          
             for date in dates:
                 date = date.text
                 date_texts.append(date)
@@ -130,7 +115,6 @@ def scrape():
             time.sleep(delay)
 
             authors = driver.find_elements_by_class_name("entry-author")
-
             for author in authors:
                 author = author.text 
                 author_texts.append(author)
@@ -151,41 +135,40 @@ def scrape():
                     pass
 
         driver.close()
-        kisa = [len(entry_texts), len(author_texts), len(date_texts)]
-        kisa = min(kisa)
-        kisa -= 1
 
-        entry_texts_fin = entry_texts[:kisa]
+        length_list = [entry_texts, author_texts, date_texts]
+        limit = map(len, length_list)
+        limit = min(list(limit))
+        limit -= 1
+
+        entry_texts_fin = entry_texts[:limit]
         df = pd.DataFrame({"Entryler": entry_texts_fin})
 
         if scrape_date:
-            date_texts_fin = date_texts[:kisa]
+            date_texts_fin = date_texts[:limit]
             df["Tarihler"] = date_texts_fin
 
         if scrape_author:
-            author_texts_fin = author_texts[:kisa]
+            author_texts_fin = author_texts[:limit]
             df["Yazarlar"] = author_texts_fin
 
-        df.to_excel(dosya_adi, header = True, index = False)
+        df.to_excel(file, header = True, index = False)
 
         print("Başlık kazıması tamamlandı.")
-        print("Çektiğiniz veriler "+ dosya_adi + " adlı excel dosyasına kaydedildi.")
+        print("Çektiğiniz veriler "+ file + " adlı excel dosyasına kaydedildi.")
 
-    spesific_initialize()
-    spesific_scrape()
 
-def end():
+        print("""
+            --------------------------------------------------------------------------
+            -  Projeden memnun kaldıysanız Github üzerinden yıldızlamayı unutmayın.  -
+            -  Github Hesabım: ardauzunoglu                                          -
+            --------------------------------------------------------------------------
+        """)
 
-    print("""
-        --------------------------------------------------------------------------
-        -  Projeden memnun kaldıysanız Github üzerinden yıldızlamayı unutmayın.  -
-        -  Github Hesabım: ardauzunoglu                                          -
-        --------------------------------------------------------------------------
-    """)
+        time.sleep(3)
 
-    time.sleep(3)
-
-if __name__ == "__main__":
     initialize()
     scrape()
-    end()
+
+if __name__ == "__main__":
+    eksisozluk_scrape()
