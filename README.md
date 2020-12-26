@@ -35,7 +35,7 @@ Youtube - [Rehber](https://youtu.be/NnSaqihGqq8) <br>
 ![3](https://user-images.githubusercontent.com/48959682/102391626-05aab180-3fe7-11eb-906f-de8a3cd7f41a.png)
 ![4](https://user-images.githubusercontent.com/48959682/102688999-f0fb3300-420b-11eb-806c-639581ed361d.png)
 
-### Repository'i Sıfırdan Geliştireceğimi Youtube Serisi
+### Repository'i Sıfırdan Geliştireceğimiz Youtube Serisi
 [Oynatma Listesi](https://www.youtube.com/watch?v=dTPsHx7fkcQ)
 
 ### Geliştirici
