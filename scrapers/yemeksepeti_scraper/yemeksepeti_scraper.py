@@ -7,21 +7,32 @@ from selenium.webdriver.common.keys import Keys
 
 def yemeksepeti_scrape():
     def initialize():
-        def preference(scrape_input):
-                while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
-                    if scrape_input.lower() == "y":
-                        output = True
-                        break
+        def preference(scrape_input, question):
+            while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
+                if scrape_input.lower() == "y":
+                    output = True
+                    break
 
-                    elif scrape_input.lower() == "n":
-                        output = False
-                        break
+                elif scrape_input.lower() == "n":
+                    output = False
+                    break
 
-                    else:
-                        print("Geçersiz yanıt.")
-                        scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                else:
+                    print("Geçersiz yanıt.")
+                    scrape_input = input(question) 
 
-                return output
+            return output
+
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+            
+            return delay
+
         print("""
             ---------------------------------------------------------
             -         Yemeksepeti Scraper'a hoş geldiniz!           -
@@ -34,11 +45,10 @@ def yemeksepeti_scrape():
         restaurant_info = input("Yorumların Çekileceği Restoran: ")
         username_info = input("Yemeksepeti kullanıcı adı: ")
         password_info = input("Yemeksepeti parola: ")
-        password_info = "ardaardaarda1"
         city_info = input("Yemeksepeti Şehir: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = int(input("Bekleme süresi: "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         review_texts = []
         author_texts = []
@@ -47,20 +57,25 @@ def yemeksepeti_scrape():
         service_ratings = []
         flavour_ratings = []
 
-        scrape_author_input = input("Müşteri isimleri çekilsin mi(y/n): ")
-        scrape_author = preference(scrape_author_input)
+        scrape_author_question = "Müşteri isimleri çekilsin mi(y/n): "
+        scrape_author_input = input(scrape_author_question)
+        scrape_author = preference(scrape_author_input, scrape_author_question)
 
-        scrape_date_input = input("İnceleme tarihleri çekilsin mi(y/n): ")
-        scrape_date = preference(scrape_date_input)
+        scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_date = preference(scrape_date_input, scrape_date_question)
 
-        scrape_speed_input = input("İncelemedeki hız puanı çekilsin mi(y/n): ")
-        scrape_speed = preference(scrape_speed_input)
+        scrape_speed_question = "İncelemedeki hız puanı çekilsin mi(y/n): "
+        scrape_speed_input = input(scrape_speed_question)
+        scrape_speed = preference(scrape_speed_input, scrape_speed_question)
 
-        scrape_service_input = input("İncelemedeki servis puanı çekilsin mi(y/n): ")
-        scrape_service = preference(scrape_service_input)
+        scrape_service_question = "İncelemedeki servis puanı çekilsin mi(y/n): "
+        scrape_service_input = input(scrape_service_question)
+        scrape_service = preference(scrape_service_input, scrape_service_question)
 
-        scrape_flavour_input = input("İncelemedeki lezzet puanı çekilsin mi(y/n): ")
-        scrape_flavour = preference(scrape_flavour_input)
+        scrape_flavour_question = "İncelemedeki lezzet puanı çekilsin mi(y/n): "
+        scrape_flavour_input = input(scrape_flavour_question)
+        scrape_flavour = preference(scrape_flavour_input, scrape_flavour_question)
         
         path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
@@ -138,8 +153,8 @@ def yemeksepeti_scrape():
             search_box.send_keys(Keys.ENTER)
             time.sleep(delay+3)
 
-            restoran = driver.find_element_by_class_name("restaurantName")
-            restoran.click()
+            restaurant = driver.find_element_by_class_name("restaurantName")
+            restaurant.click()
             time.sleep(delay)
             print("Restoran bulundu.")
 
@@ -157,19 +172,19 @@ def yemeksepeti_scrape():
             sys.exit()
 
         l = 1
-        yorum_uzunlugu = yorumlar_section.text
-        yorum_uzunlugu = yorum_uzunlugu.replace("Yorumlar", "")
-        yorum_uzunlugu = yorum_uzunlugu.replace("(","")
-        yorum_uzunlugu = yorum_uzunlugu.replace(")","")
-        yorum_uzunlugu = int(yorum_uzunlugu)
+        review_count = yorumlar_section.text
+        review_count = review_count.replace("Yorumlar", "")
+        review_count = review_count.replace("(","")
+        review_count = review_count.replace(")","")
+        review_count = int(review_count)
 
-        if yorum_uzunlugu % 30 == 0:
-            yorum_uzunlugu = yorum_uzunlugu // 30
+        if review_count % 30 == 0:
+            review_count = review_count // 30
 
         else:
-            yorum_uzunlugu = (yorum_uzunlugu // 30) + 1
+            review_count = (review_count // 30) + 1
 
-        while l < yorum_uzunlugu:
+        while l < review_count:
 
             lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
             match = False
@@ -287,7 +302,6 @@ def yemeksepeti_scrape():
 
         x = "Çektiğiniz veriler "+ file + " adlı excel dosyasına kaydedildi."
         print(x)
-
         print("""
             --------------------------------------------------------------------------
             -  Projeden memnun kaldıysanız Github üzerinden yıldızlamayı unutmayın.  -

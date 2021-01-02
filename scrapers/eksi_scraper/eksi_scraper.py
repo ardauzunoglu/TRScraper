@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 
 def eksisozluk_scrape():
     def initialize():
-        def preference(scrape_input):
+        def preference(scrape_input, question):
             while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
                 if scrape_input.lower() == "y":
                     output = True
@@ -19,10 +19,20 @@ def eksisozluk_scrape():
 
                 else:
                     print("Geçersiz yanıt.")
-                    scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                    scrape_input = input(question) 
 
             return output
 
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+            
+            return delay
+            
         print("""
             ---------------------------------------------------------
             -         Ekşi Sözlük Scraper'a hoş geldiniz!           -
@@ -35,19 +45,21 @@ def eksisozluk_scrape():
         title = input("Entrylerin çekileceği başlık: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = int(input("Bekleme süresi(sn): "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         entry_texts = []
         author_texts = []
         date_texts = []
 
-        scrape_author_input = input("Yazar isimleri çekilsin mi(y/n): ")
-        scrape_date_input = input("Entry tarihleri çekilsin mi(y/n): ")
+        scrape_author_question = "Yazar isimleri çekilsin mi(y/n): "
+        scrape_author_input = input(scrape_author_question)
+        scrape_author = preference(scrape_author_input, scrape_author_question)
 
-        scrape_author = preference(scrape_author_input)
-        scrape_date = preference(scrape_date_input)
+        scrape_date_question = "Entry tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_date = preference(scrape_date_input, scrape_date_question)
 
-        path = "C:\chromedriver.exe"
+        path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
     def scrape():
         try:
@@ -74,9 +86,9 @@ def eksisozluk_scrape():
 
         try:
             print("Başlık aranıyor...")
-            arama_bari = driver.find_element_by_id("search-textbox")
-            arama_bari.send_keys(title)
-            arama_bari.send_keys(Keys.ENTER)
+            search_bar = driver.find_element_by_id("search-textbox")
+            search_bar.send_keys(title)
+            search_bar.send_keys(Keys.ENTER)
             time.sleep(delay)
             print("Başlık bulundu.")
 
@@ -85,15 +97,15 @@ def eksisozluk_scrape():
             sys.exit()
 
         try:
-            baslik_uzunlugu = driver.find_element_by_class_name("last")
-            baslik_uzunlugu = int(baslik_uzunlugu.text)
+            length_of_title = driver.find_element_by_class_name("last")
+            length_of_title = int(length_of_title.text)
 
         except NoSuchElementException:
-            baslik_uzunlugu = 1
+            length_of_title = 1
 
         l = 1
 
-        while l <= baslik_uzunlugu:
+        while l <= length_of_title:
 
             print("Veriler çekiliyor...")
             print("Sayfa: " + str(l)) 
@@ -122,14 +134,14 @@ def eksisozluk_scrape():
             l += 1
 
             try:
-                reklami_gec = driver.find_element_by_id("interstitial-close-link-tag")
-                reklami_gec.click()
+                close_ad = driver.find_element_by_id("interstitial-close-link-tag")
+                close_ad.click()
                 time.sleep(delay)
 
             except NoSuchElementException:
                 try:
-                    sonraki = driver.find_element_by_class_name("next")
-                    sonraki.click()
+                    next_page = driver.find_element_by_class_name("next")
+                    next_page.click()
 
                 except NoSuchElementException:
                     pass
@@ -156,7 +168,6 @@ def eksisozluk_scrape():
 
         print("Başlık kazıması tamamlandı.")
         print("Çektiğiniz veriler "+ file + " adlı excel dosyasına kaydedildi.")
-
         print("""
             --------------------------------------------------------------------------
             -  Projeden memnun kaldıysanız Github üzerinden yıldızlamayı unutmayın.  -

@@ -6,7 +6,7 @@ from selenium.common.exceptions import WebDriverException, NoSuchElementExceptio
 
 def beyazperde_scrape():
     def initialize():
-        def preference(scrape_input):
+        def preference(scrape_input, question):
             while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
                 if scrape_input.lower() == "y":
                     output = True
@@ -18,9 +18,19 @@ def beyazperde_scrape():
 
                 else:
                     print("Geçersiz yanıt.")
-                    scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                    scrape_input = input(question) 
 
             return output
+
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+
+            return delay
         
         print("""
             ---------------------------------------------------------
@@ -33,7 +43,7 @@ def beyazperde_scrape():
 
         film = input("İncelemelerin Çekileceği Film: ")
         file = input("Oluşturulacak Excel dosyasının adı: ") + ".xlsx"
-        delay = int(input("Bekleme süresi: "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         review_texts = []
         review_useful = []
@@ -42,15 +52,21 @@ def beyazperde_scrape():
         member_name_texts = []
         date_texts = []
 
-        scrape_useful_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ")
-        scrape_scores_input = input("Filme verilen puan çekilsin mi(y/n): ")
-        scrape_member_name_input = input("Kullanıcı isimleri çekilsin mi(y/n): ")
-        scrape_date_input = input("İnceleme tarihleri çekilsin mi(y/n): ")
-        
-        scrape_useful = preference(scrape_useful_input)
-        scrape_scores = preference(scrape_scores_input)
-        scrape_member_name = preference(scrape_member_name_input)
-        scrape_date = preference(scrape_date_input)
+        scrape_useful_question = "İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): "
+        scrape_useful_input = input(scrape_useful_question)
+        scrape_useful = preference(scrape_useful_input, scrape_useful_question)
+
+        scrape_scores_question = "Filme verilen puan çekilsin mi(y/n): "
+        scrape_scores_input = input(scrape_scores_question)
+        scrape_scores = preference(scrape_scores_input, scrape_scores_question)
+
+        scrape_member_name_question = "Kullanıcı isimleri çekilsin mi(y/n): "
+        scrape_member_name_input = input(scrape_member_name_question)
+        scrape_member_name = preference(scrape_member_name_input, scrape_member_name_question)
+
+        scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_date = preference(scrape_date_input, scrape_date_question)
 
         path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
@@ -155,26 +171,23 @@ def beyazperde_scrape():
 
             scores = driver.find_elements_by_class_name("stareval-note")
             for score in scores:
-                score = score.text
-                score = score.replace(",0","")
+                score = score.text.replace(",0","")
                 review_scores.append(score)
 
             member_names = driver.find_elements_by_class_name("review-card-user-infos.cf")
             for member_name in member_names:
-                member_name = member_name.text
                 seperation = member_name.index("\n")
-                member_name = member_name[:seperation]
+                member_name = member_name.text[:seperation]
                 member_name_texts.append(member_name)
 
             dates = driver.find_elements_by_class_name("review-card-meta-date")
             for date in dates:
-                date = date.text
-                date = date.split()
-                date = date[:3]
+                date = date.text.split()[:3]
                 date = " ".join(date)
                 date_texts.append(date)
 
             l += 1
+            
             url = constant_url + "?page=" + str(l)
             driver.get(url)
 

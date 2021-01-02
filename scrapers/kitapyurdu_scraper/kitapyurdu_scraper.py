@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 
 def kitapyurdu_scrape():
     def initialize():
-        def preference(scrape_input):
+        def preference(scrape_input, question):
                 while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
                     if scrape_input.lower() == "y":
                         output = True
@@ -19,9 +19,20 @@ def kitapyurdu_scrape():
 
                     else:
                         print("Geçersiz yanıt.")
-                        scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                        scrape_input = input(question) 
 
                 return output
+
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+
+            return delay
+
         print("""
             ---------------------------------------------------------
             -         Kitapyurdu Scraper'a hoş geldiniz!            -
@@ -34,7 +45,7 @@ def kitapyurdu_scrape():
         book = input("İncelemelerin Çekileceği Kitap Adı: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = int(input("Bekleme süresi: "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         review_texts = []
         review_useful = []
@@ -42,14 +53,17 @@ def kitapyurdu_scrape():
         author_texts = []
         date_texts = []
 
-        scrape_useful_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ")
-        scrape_useful = preference(scrape_useful_input)
+        scrape_useful_question = "İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): "
+        scrape_useful_input = input(scrape_useful_question)
+        scrape_useful = preference(scrape_useful_input, scrape_useful_question)
 
-        scrape_author_input = input("Kullanıcı isimleri çekilsin mi(y/n): ")
-        scrape_author = preference(scrape_author_input)
+        scrape_author_question = "Kullanıcı isimleri çekilsin mi(y/n): "
+        scrape_author_input = input(scrape_author_question)
+        scrape_author = preference(scrape_author_input, scrape_author_question)
 
-        scrape_date_input = input("İnceleme tarihleri çekilsin mi(y/n): ")
-        scrape_date = preference(scrape_date_input)
+        scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_date = preference(scrape_date_input, scrape_date_question)
 
         path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 

@@ -7,21 +7,32 @@ from selenium.webdriver.common.keys import Keys
 
 def trendyol_scrape():
     def initialize():
-        def preference(scrape_input):
-                while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
-                    if scrape_input.lower() == "y":
-                        output = True
-                        break
+        def preference(scrape_input, question):
+            while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
+                if scrape_input.lower() == "y":
+                    output = True
+                    break
 
-                    elif scrape_input.lower() == "n":
-                        output = False
-                        break
+                elif scrape_input.lower() == "n":
+                    output = False
+                    break
 
-                    else:
-                        print("Geçersiz yanıt.")
-                        scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                else:
+                    print("Geçersiz yanıt.")
+                    scrape_input = input(question) 
 
-                return output
+            return output
+
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+
+            return delay
+
         print("""
             ---------------------------------------------------------
             -         Trendyol Scraper'a hoş geldiniz!              -
@@ -29,27 +40,29 @@ def trendyol_scrape():
             ---------------------------------------------------------
         """)
 
-
         global product_name, file, delay, review_texts, review_useful, customer_name_texts, date_texts, scrape_useful, scrape_customer_name, scrape_date, path
 
-        product_name = input("Yorumların çekileceği ürün adı: ")
+        product_name = input("İncelemelerin çekileceği ürün adı: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = int(input("Bekleme süresi: "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         review_texts = []
         review_useful = []
         customer_name_texts = []
         date_texts = []
 
-        scrape_useful_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ")
-        scrape_useful = preference(scrape_useful_input)
+        scrape_useful_question = "İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): "
+        scrape_useful_input = input(scrape_useful_question)
+        scrape_useful = preference(scrape_useful_input, scrape_useful_question)
 
-        scrape_customer_name_input = input("Müşteri isimleri çekilsin mi(y/n): ")
-        scrape_customer_name = preference(scrape_customer_name_input)
+        scrape_customer_name_question = "Müşteri isimleri çekilsin mi(y/n): "
+        scrape_customer_name_input = input(scrape_customer_name_question)
+        scrape_customer_name = preference(scrape_customer_name_input, scrape_customer_name_question)
 
-        scrape_date_input = input("İnceleme tarihleri çekilsin mi(y/n): ")
-        scrape_date = preference(scrape_date_input)
+        scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question) 
+        scrape_date = preference(scrape_date_input, scrape_date_question)
 
         path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
@@ -67,9 +80,9 @@ def trendyol_scrape():
         try:
             print("Trendyol adresine gidiliyor...")
             driver.get("https://www.trendyol.com")
-            time.sleep(1)
+            time.sleep(delay)
             driver.maximize_window()
-            time.sleep(1)
+            time.sleep(delay)
             print("Trendyol adresine gidildi.")
 
         except:
@@ -78,14 +91,14 @@ def trendyol_scrape():
 
         try:
             print("Ürün aranıyor...")
-            arama_bari = driver.find_element_by_class_name("search-box")
-            arama_bari.send_keys(product_name)
-            arama_bari.send_keys(Keys.ENTER)
-            time.sleep(1)
+            search_bar = driver.find_element_by_class_name("search-box")
+            search_bar.send_keys(product_name)
+            search_bar.send_keys(Keys.ENTER)
+            time.sleep(delay)
 
-            urun = driver.find_element_by_class_name("prdct-desc-cntnr")
-            urun.click()
-            time.sleep(1)
+            product = driver.find_element_by_class_name("prdct-desc-cntnr")
+            product.click()
+            time.sleep(delay)
             print("Ürün bulundu.")
 
         except NoSuchElementException:
@@ -98,26 +111,25 @@ def trendyol_scrape():
         url = url + "/yorumlar"
         driver.get(url)
 
-        yorum_sayisi = driver.find_element_by_class_name("pr-rnr-sm-p-s")
-        yorum_sayisi = yorum_sayisi.text
-        yorum_sayisi = yorum_sayisi.replace("Değerlendirme", "")
-        yorum_sayisi = yorum_sayisi.replace("Yorum", "")
-        yorum_sayisi = yorum_sayisi.split()
-        yorum_sayisi = int(yorum_sayisi[1])
+        review_count = driver.find_element_by_class_name("pr-rnr-sm-p-s").text
+        review_count = review_count.replace("Değerlendirme", "")
+        review_count = review_count.replace("Yorum", "")
+        review_count = review_count.split()
+        review_count = int(review_count[1])
 
-        while len(review_texts) < yorum_sayisi:
+        while len(review_texts) < review_count:
 
             lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
             match = False
 
             while match == False:
                 lastCount = lenOfPage
-                time.sleep(1)
+                time.sleep(delay)
                 lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
                 if lastCount == lenOfPage:
                     match = True
 
-            time.sleep(1)
+            time.sleep(delay)
 
             reviews = driver.find_elements_by_class_name("rnr-com-tx")
             for review in reviews:
@@ -171,9 +183,8 @@ def trendyol_scrape():
 
         df.to_excel(file, header = True, index = False)
 
-        x = "Çektiğiniz veriler "+ file + " adlı excel dosyasına kaydedildi."
+        x = "Çektiğiniz veriler " + file + " adlı excel dosyasına kaydedildi."
         print(x)
-
         print("""
             --------------------------------------------------------------------------
             -  Projeden memnun kaldıysanız Github üzerinden yıldızlamayı unutmayın.  -
