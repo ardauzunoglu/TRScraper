@@ -69,7 +69,7 @@ def n11_scraper():
         scrape_date_input = input(scrape_date_question)
         scrape_dates = preference(scrape_date_input, scrape_date_question)
 
-        path = "C:\chromedriver.exe"
+        path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
     def scrape():
         try:
@@ -178,7 +178,6 @@ def n11_scraper():
         if scrape_useful:
             review_useful_fin = review_useful[:limit]
             df["Yorum Beğeni Sayısı"] = review_useful_fin
-            df["Yorum Beğeni Sayısı"] = df["Yorum Beğeni Sayısı"]
 
         if scrape_headlines:
             review_headlines_fin = review_headlines[:limit]
