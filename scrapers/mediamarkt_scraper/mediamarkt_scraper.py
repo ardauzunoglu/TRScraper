@@ -69,7 +69,7 @@ def mediamarkt_scraper():
         scrape_date_input = input(scrape_date_question)
         scrape_dates = preference(scrape_date_input, scrape_date_question)
 
-        path = "C:\chromedriver.exe"
+        path = "BURAYA CHROMEDRİVER KONUMUNU GİRİNİZ"
 
     def scrape():
         try:
