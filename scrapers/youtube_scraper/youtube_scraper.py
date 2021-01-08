@@ -7,21 +7,32 @@ from selenium.webdriver.common.keys import Keys
 
 def youtube_scrape():
     def initialize():
-        def preference(scrape_input):
-                while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
-                    if scrape_input.lower() == "y":
-                        output = True
-                        break
+        def preference(scrape_input, question):
+            while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
+                if scrape_input.lower() == "y":
+                    output = True
+                    break
 
-                    elif scrape_input.lower() == "n":
-                        output = False
-                        break
+                elif scrape_input.lower() == "n":
+                    output = False
+                    break
 
-                    else:
-                        print("Geçersiz yanıt.")
-                        scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                else:
+                    print("Geçersiz yanıt.")
+                    scrape_input = input(question) 
 
-                return output
+            return output
+
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+
+            return delay
+
         print("""
             ---------------------------------------------------------
             -         Youtube Scraper'a hoş geldiniz!               -
@@ -34,7 +45,7 @@ def youtube_scrape():
         url = input("Yorumların çekileceği Youtube videosunun bağlantısı: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = int(input("Bekleme süresi: "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         comment_texts = []
         author_texts = []
@@ -42,22 +53,25 @@ def youtube_scrape():
         title_text = []
         like_texts = []
 
-        scrape_author_input = input("Kullanıcı isimleri çekilsin mi(y/n): ")
-        scrape_author = preference(scrape_author_input)
+        scrape_author_question = "Kullanıcı isimleri çekilsin mi(y/n): "
+        scrape_author_input = input(scrape_author_question)
+        scrape_author = preference(scrape_author_input, scrape_author_question)
 
-        scrape_date_input = input("Yorum tarihleri çekilsin mi(y/n): ")
-        scrape_date = preference(scrape_date_input)
+        scrape_date_question = "Yorum tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_date = preference(scrape_date_input, scrape_date_question)
 
-        scrape_title_input = input("Video başlığı çekilsin mi(y/n): ")
-        scrape_title = preference(scrape_title_input)
-    
-        scrape_like_input = input("Yorumun aldığı beğeni sayısı çekilsin mi(y/n): ")
-        scrape_like = preference(scrape_like_input)
+        scrape_title_question = "Video başlığı çekilsin mi(y/n): "
+        scrape_title_input = input(scrape_title_question)
+        scrape_title = preference(scrape_title_input, scrape_title_question)
 
-        path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
+        scrape_like_question = "Yorumun aldığı beğeni sayısı çekilsin mi(y/n): "
+        scrape_like_input = input(scrape_like_question)
+        scrape_like = preference(scrape_like_input, scrape_like_question)
+
+        path = "C:\chromedriver.exe"
 
     def scrape():
-
         try:
             print("Chromedriver'a erişiliyor...")
             driver = webdriver.Chrome(path)
@@ -106,24 +120,24 @@ def youtube_scrape():
         while l <= comment_count:
             try:
                 comments = driver.find_elements_by_xpath("//*[@id='contents']/ytd-comment-thread-renderer")
-                comment = comments[l-1]
-                print("Veri çekiliyor...")
-                print("Yorum: " + str(l))
-                author = comment.find_element_by_id("author-text").text
-                date = comment.find_element_by_class_name("published-time-text").text
-                comment_text = comment.find_element_by_id("content-text").text
-                likes = comment.find_element_by_id("vote-count-middle").text
+                for comment in comments:
+                    print("Veri çekiliyor...")
+                    print("Yorum: " + str(l))
+                    author = comment.find_element_by_id("author-text").text
+                    date = comment.find_element_by_class_name("published-time-text").text
+                    comment_text = comment.find_element_by_id("content-text").text
+                    likes = comment.find_element_by_id("vote-count-middle").text
 
-                author_texts.append(author)
-                date_texts.append(date)
-                comment_texts.append(comment_text)
-                like_texts.append(likes)
-                title_text.append(title)
+                    author_texts.append(author)
+                    date_texts.append(date)
+                    comment_texts.append(comment_text)
+                    like_texts.append(likes)
+                    title_text.append(title)
+
+                    l += 1
 
             except NoSuchElementException:
                 break
-
-            l += 1
 
         driver.close()
 

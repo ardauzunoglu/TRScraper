@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
-def trendyol_scrape():
+def n11_scraper():
     def initialize():
         def preference(scrape_input, question):
             while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
@@ -34,21 +34,22 @@ def trendyol_scrape():
             return delay
 
         print("""
-            ---------------------------------------------------------
-            -         Trendyol Scraper'a hoş geldiniz!              -
-            -         Geliştirici: Arda Uzunoğlu                    -
-            ---------------------------------------------------------
+                ---------------------------------------------------------
+                -         N11 Scraper'a hoş geldiniz!                   -
+                -         Geliştirici: Arda Uzunoğlu                    -
+                ---------------------------------------------------------
         """)
 
-        global product_name, file, delay, review_texts, review_useful, customer_name_texts, date_texts, scrape_useful, scrape_customer_name, scrape_date, path
+        global product_name, file, delay, review_texts, review_headlines, review_useful, customer_name_texts, date_texts, scrape_headlines, scrape_useful, scrape_customer_names, scrape_dates, path
 
         product_name = input("İncelemelerin çekileceği ürün adı: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = delay_check(input("Bekleme süresi(sn): "))
+        delay = delay_check(input("Bekleme süresi(sn): "))    
 
         review_texts = []
         review_useful = []
+        review_headlines = []
         customer_name_texts = []
         date_texts = []
 
@@ -56,13 +57,17 @@ def trendyol_scrape():
         scrape_useful_input = input(scrape_useful_question)
         scrape_useful = preference(scrape_useful_input, scrape_useful_question)
 
+        scrape_headlines_question = "İncelemenin başlığı çekilsin mi(y/n): "
+        scrape_headlines_input = input(scrape_headlines_question)
+        scrape_headlines = preference(scrape_headlines_input, scrape_headlines_question)
+
         scrape_customer_name_question = "Müşteri isimleri çekilsin mi(y/n): "
         scrape_customer_name_input = input(scrape_customer_name_question)
-        scrape_customer_name = preference(scrape_customer_name_input, scrape_customer_name_question)
+        scrape_customer_names = preference(scrape_customer_name_input, scrape_customer_name_question)
 
         scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
-        scrape_date_input = input(scrape_date_question) 
-        scrape_date = preference(scrape_date_input, scrape_date_question)
+        scrape_date_input = input(scrape_date_question)
+        scrape_dates = preference(scrape_date_input, scrape_date_question)
 
         path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
@@ -74,29 +79,29 @@ def trendyol_scrape():
             print("Chromedriver'a erişildi.")
 
         except WebDriverException:
-            print("Chromedriver kullanılamıyor.")
+            print("Chromedriver kullanılamıyor.")            
             sys.exit()
 
         try:
-            print("Trendyol adresine gidiliyor...")
-            driver.get("https://www.trendyol.com")
+            print("N11 adresine gidiliyor...")
+            driver.get("https://www.n11.com")
             time.sleep(delay)
             driver.maximize_window()
             time.sleep(delay)
-            print("Trendyol adresine gidildi.")
+            print("N11 adresine gidildi.")
 
         except:
-            print("Trendyola'a erişilemiyor.")
+            print("N11'e erişilemiyor.")
             sys.exit()
 
         try:
             print("Ürün aranıyor...")
-            search_bar = driver.find_element_by_class_name("search-box")
+            search_bar = driver.find_element_by_id("searchData")
             search_bar.send_keys(product_name)
             search_bar.send_keys(Keys.ENTER)
             time.sleep(delay)
 
-            product = driver.find_element_by_class_name("prdct-desc-cntnr")
+            product = driver.find_element_by_class_name("productName")
             product.click()
             time.sleep(delay)
             print("Ürün bulundu.")
@@ -105,67 +110,68 @@ def trendyol_scrape():
             print("Ürün bulunamadı.")
             sys.exit()
 
-        url = driver.current_url
-        index_of_question_mark = url.index("?")
-        url = url[:index_of_question_mark]
-        url = url + "/yorumlar"
-        driver.get(url)
+        review_count = driver.find_element_by_class_name("reviewNum").text
+        review_count = int(review_count)
 
-        review_count = driver.find_element_by_class_name("pr-rnr-sm-p-s").text
-        review_count = review_count.replace("Değerlendirme", "")
-        review_count = review_count.replace("Yorum", "")
-        review_count = review_count.split()
-        review_count = int(review_count[1])
+        go_to_reviews = driver.find_element_by_id("readReviews")
+        go_to_reviews.click()
 
-        while len(review_texts) < review_count:
+        if review_count % 10 == 0:
+            length_of_page = review_count // 10
+        else:
+            length_of_page = (review_count // 10) + 1
 
-            lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
-            match = False
+        l = 1
 
-            while match == False:
-                lastCount = lenOfPage
-                time.sleep(delay)
-                lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
-                if lastCount == lenOfPage:
-                    match = True
-
+        while l <= length_of_page:
+            
+            print("İncelemeler çekiliyor...")
+            print("Sayfa: " + str(l))
+            
             time.sleep(delay)
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;")
 
-            reviews = driver.find_elements_by_class_name("rnr-com-tx")
-            for review in reviews:
-                review = review.text
-                review_texts.append(review)
+            comments = driver.find_elements_by_class_name("comment")
+            for comment in comments:
+                
+                customer = comment.find_element_by_class_name("userName").text
+                customer_name_texts.append(customer)
 
-                print("Veriler çekiliyor...")
-                print("İnceleme: " + str(len(review_texts)))
+                date = comment.find_element_by_class_name("commentDate").text
+                date_texts.append(date)
 
-            usefuls = driver.find_elements_by_xpath("//*[@class='tooltip-wrp']//span[2]")
-            for useful in usefuls:
-                useful = useful.text
-                useful = useful.strip("()")
+                try:
+                    headline = comment.find_element_by_class_name("commentTitle").text
+                    review_headlines.append(headline)
+
+                except:
+                    review_headlines.append("BOŞ")
+
+                useful = comment.find_element_by_class_name("btnComment.yesBtn").text
+                useful = useful.replace("Evet", "").replace("(", "").replace(")", "")
                 review_useful.append(useful)
 
-            customers = driver.find_elements_by_xpath("//*[@class='rnr-com-bt']//span[@class = 'rnr-com-usr']")
-            for customer in customers:
-                customer = customer.text
-                customer = customer.replace("|","")
-                customer = customer.split()
+                replaced_useful = comment.find_element_by_class_name("btnComment.yesBtn").text
+                review = comment.text
+                review = review.replace(customer, "").replace(date, "").replace(replaced_useful, "").replace("Bu yorumu faydalı buldunuz mu?", "")
+                review_texts.append(review)
 
-                customer_name = customer[-3:]
-                customer_name = " ".join(customer_name)
-                customer_name_texts.append(customer_name)
+            try:
+                next_button = driver.find_element_by_xpath("//*[@id='tabPanelProComments']/div/div[2]/div[2]/a[11]")
+                next_button.click()
 
-                date = customer[:-3]
-                date = " ".join(date)
-                date_texts.append(date)
+            except:
+                pass
+
+            l += 1
 
         driver.close()
 
-        length_list = [review_texts, review_useful, customer_name_texts, date_texts]
+        length_list = [review_texts, review_useful, review_headlines, customer_name_texts, date_texts]
         limit = map(len, length_list)
         limit = min(list(limit))
         limit -= 1
-
+            
         review_texts_fin = review_texts[:limit]
         df = pd.DataFrame({"Yorum": review_texts_fin})
 
@@ -173,11 +179,15 @@ def trendyol_scrape():
             review_useful_fin = review_useful[:limit]
             df["Yorum Beğeni Sayısı"] = review_useful_fin
 
-        if scrape_customer_name:
+        if scrape_headlines:
+            review_headlines_fin = review_headlines[:limit]
+            df["Yorumun Başlığı"] = review_headlines_fin
+
+        if scrape_customer_names:
             customer_name_texts_fin = customer_name_texts[:limit]
             df["Yorum Yazan Müşteri"] = customer_name_texts_fin
 
-        if scrape_date:
+        if scrape_dates:
             date_texts_fin = date_texts[:limit]
             df["Yorumun Yazıldığı Tarih"] = date_texts_fin
 
@@ -185,16 +195,15 @@ def trendyol_scrape():
 
         x = "Çektiğiniz veriler " + file + " adlı excel dosyasına kaydedildi."
         print(x)
+
         print("""
             --------------------------------------------------------------------------
             -  Projeden memnun kaldıysanız Github üzerinden yıldızlamayı unutmayın.  -
             -  Github Hesabım: ardauzunoglu                                          -
             --------------------------------------------------------------------------
         """)
-
-        time.sleep(3)
     initialize()
     scrape()
 
 if __name__ == "__main__":
-    trendyol_scrape()
+    n11_scraper()

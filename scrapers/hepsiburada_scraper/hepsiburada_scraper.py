@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 
 def hepsiburada_scrape():
     def initialize():
-        def preference(scrape_input):
+        def preference(scrape_input, question):
                 while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
                     if scrape_input.lower() == "y":
                         output = True
@@ -19,9 +19,19 @@ def hepsiburada_scrape():
 
                     else:
                         print("Geçersiz yanıt.")
-                        scrape_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ") 
+                        scrape_input = input(question) 
 
                 return output
+
+        def delay_check(delay):
+            while type(delay) != int:
+                try:
+                    delay = int(delay)
+                except ValueError:
+                    print("Lütfen bir sayı değeri giriniz.")
+                    delay = input("Bekleme süresi: ")
+
+            return delay
 
         print("""
             ---------------------------------------------------------
@@ -35,7 +45,7 @@ def hepsiburada_scrape():
         product_name = input("Değerlendirmelerin çekileceği ürün adı: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
         file = file + ".xlsx"
-        delay = int(input("Bekleme süresi: "))
+        delay = delay_check(input("Bekleme süresi(sn): "))
 
         review_texts = []
         review_useful = []
@@ -45,20 +55,25 @@ def hepsiburada_scrape():
         customer_age_texts = []
         date_texts = []
 
-        scrape_useful_input = input("İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): ")
-        scrape_useful = preference(scrape_useful_input)
+        scrape_useful_question = "İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): "
+        scrape_useful_input = input(scrape_useful_question)
+        scrape_useful = preference(scrape_useful_input, scrape_useful_question)
 
-        scrape_customer_name_input = input("Müşteri isimleri çekilsin mi(y/n): ")
-        scrape_customer_name = preference(scrape_customer_name_input)
+        scrape_customer_name_question = "Müşteri isimleri çekilsin mi(y/n): "
+        scrape_customer_name_input = input(scrape_customer_name_question)
+        scrape_customer_name = preference(scrape_customer_name_input, scrape_customer_name_question)
 
-        scrape_customer_province_input = input("Müşteri konumları çekilsin mi(y/n): ")
-        scrape_customer_province = preference(scrape_customer_province_input)
+        scrape_customer_province_question = "Müşteri konumları çekilsin mi(y/n): "
+        scrape_customer_province_input = input(scrape_customer_province_question)
+        scrape_customer_province = preference(scrape_customer_province_input, scrape_customer_province_question)
 
-        scrape_customer_age_input = input("Müşteri yaşları çekilsin mi(y/n): ")
-        scrape_customer_age = preference(scrape_customer_age_input)
+        scrape_customer_age_question = "Müşteri yaşları çekilsin mi(y/n): "
+        scrape_customer_age_input = input(scrape_customer_age_question)
+        scrape_customer_age = preference(scrape_customer_age_input, scrape_customer_age_question)
 
-        scrape_date_input = input("İnceleme tarihleri çekilsin mi(y/n): ")
-        scrape_date = preference(scrape_date_input)
+        scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_date = preference(scrape_date_input, scrape_date_question)
         
         path = "BURAYA CHROMEDRIVER KONUMUNU GİRİNİZ"
 
@@ -87,13 +102,13 @@ def hepsiburada_scrape():
 
         try:
             print("Ürün aranıyor...")
-            arama_bari = driver.find_element_by_class_name("desktopOldAutosuggestTheme-input")
-            arama_bari.send_keys(product_name)
-            arama_bari.send_keys(Keys.ENTER)
+            search_bar = driver.find_element_by_class_name("desktopOldAutosuggestTheme-input")
+            search_bar.send_keys(product_name)
+            search_bar.send_keys(Keys.ENTER)
             time.sleep(delay)
 
-            urun = driver.find_element_by_class_name("search-item")
-            urun.click()
+            product = driver.find_element_by_class_name("search-item")
+            product.click()
             time.sleep(delay)
             print("Ürün bulundu.")
             
