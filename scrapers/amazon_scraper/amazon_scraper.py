@@ -36,13 +36,6 @@ def amazon_scraper():
 
                 return delay
 
-            print("""
-                    ---------------------------------------------------------
-                    -         Amazon Scraper'a hoş geldiniz!                -
-                    -         Geliştirici: Arda Uzunoğlu                    -
-                    ---------------------------------------------------------
-            """)
-
             global product_name, file, delay, review_texts, review_headlines, review_useful, customer_name_texts, date_texts, scrape_headlines, scrape_useful, scrape_customer_names, scrape_dates, path
 
             product_name = input("İncelemelerin çekileceği ürün adı: ")
@@ -232,15 +225,21 @@ def amazon_scraper():
         selenium_scrape()
 
     def beautifulsoup():
-        print("""
-                    ---------------------------------------------------------
-                    -         Amazon Scraper'a hoş geldiniz!                -
-                    -         Geliştirici: Arda Uzunoğlu                    -
-                    ---------------------------------------------------------
-            """)
-        review_list = []
-        page_url = input("Ürün linki: ")
-        file = input("Oluşturulacak Excel dosyasının adı: ") + ".xlsx"
+        def preference(scrape_input, question):
+            while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
+                if scrape_input.lower() == "y":
+                    output = True
+                    break
+
+                elif scrape_input.lower() == "n":
+                    output = False
+                    break
+
+                else:
+                    print("Geçersiz yanıt.")
+                    scrape_input = input(question) 
+
+            return output
 
         def get_soup(url):
             r = requests.get(url)
@@ -264,14 +263,46 @@ def amazon_scraper():
                     "Yorumun Beğeni Sayısı":review.find("span", {"data-hook":"helpful-vote-statement"}).text.split()[0] if review.find("span", {"data-hook":"helpful-vote-statement"}).text.split()[0] != "Bir" else "1",
                     "Yorumun Başlığı":review.find("a", {"data-hook":"review-title"}).text,
                     "Yorum Yazan Müşteri":review.find("span", {"class":"a-profile-name"}).text.replace("\n", ""),
-                    "Yorumun Yazıldığı Tarih":" ".join(review.find("span", {"data-hook":"review-date"}).text.split()[1:4]), 
+                    "Yorumun Yazıldığı Tarih":" ".join(review.find("span", {"data-hook":"review-date"}).text.split()[1:4])
                 }
                 review_list.append(review)
                     
         def list_to_excel(list):
             df = pd.DataFrame(list)
+            if not scrape_useful:
+                df = df.drop(columns=["Yorumun Beğeni Sayısı"])
+
+            if not scrape_headlines:
+                df = df.drop(columns=["Yorumun Başlığı"])
+
+            if not scrape_customer_names:
+                df = df.drop(columns=["Yorum Yazan Müşteri"])
+
+            if not scrape_dates:
+                df = df.drop(columns=["Yorumun Yazıldığı Tarih"])
+
             df.to_excel(file, header = True, index = False)
             print("Excele kaydedildi.")
+
+        scrape_useful_question = "İncelemenin aldığı beğeni sayısı çekilsin mi(y/n): "
+        scrape_useful_input = input(scrape_useful_question)
+        scrape_useful = preference(scrape_useful_input, scrape_useful_question)
+
+        scrape_headlines_question = "İncelemenin başlığı çekilsin mi(y/n): "
+        scrape_headlines_input = input(scrape_headlines_question)
+        scrape_headlines = preference(scrape_headlines_input, scrape_headlines_question)
+
+        scrape_customer_name_question = "Müşteri isimleri çekilsin mi(y/n): "
+        scrape_customer_name_input = input(scrape_customer_name_question)
+        scrape_customer_names = preference(scrape_customer_name_input, scrape_customer_name_question)
+
+        scrape_date_question = "İnceleme tarihleri çekilsin mi(y/n): "
+        scrape_date_input = input(scrape_date_question)
+        scrape_dates = preference(scrape_date_input, scrape_date_question)
+
+        review_list = []
+        page_url = input("Ürün linki: ")
+        file = input("Oluşturulacak Excel dosyasının adı: ") + ".xlsx"
 
         current_page = 1
         length_of_pages = get_length_of_pages()
@@ -294,11 +325,22 @@ def amazon_scraper():
                 --------------------------------------------------------------------------
         """)
 
+    print("""
+                    ---------------------------------------------------------
+                    -         Amazon Scraper'a hoş geldiniz!                -
+                    -         Geliştirici: Arda Uzunoğlu                    -
+                    ---------------------------------------------------------
+    """)
+
     s_or_bs = input("Kullanılacak kütüphane(s/bs): ")
     if s_or_bs.lower() == "bs":
         beautifulsoup()
-    else:
+
+    elif s_or_bs.lower() == "s":
         selenium()
+
+    else:
+        print("Geçersiz yanıt.")
 
 if __name__ == "__main__":
     amazon_scraper()
