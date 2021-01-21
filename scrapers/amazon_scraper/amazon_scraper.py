@@ -258,9 +258,13 @@ def amazon_scraper():
         def get_reviews(soup):
             reviews = soup.find_all("div", {"data-hook":"review"})
             for review in reviews:
+                try:
+                    like_count = review.find("span", {"data-hook":"helpful-vote-statement"}).text.split()[0] if review.find("span", {"data-hook":"helpful-vote-statement"}).text.split()[0] != "Bir" else "1"
+                except:
+                    like_count = 0
                 review = {
                     "Yorum":review.find("span", {"data-hook":"review-body"}).text.replace("\n", ""),
-                    "Yorumun Beğeni Sayısı":review.find("span", {"data-hook":"helpful-vote-statement"}).text.split()[0] if review.find("span", {"data-hook":"helpful-vote-statement"}).text.split()[0] != "Bir" else "1",
+                    "Yorumun Beğeni Sayısı":like_count,
                     "Yorumun Başlığı":review.find("a", {"data-hook":"review-title"}).text,
                     "Yorum Yazan Müşteri":review.find("span", {"class":"a-profile-name"}).text.replace("\n", ""),
                     "Yorumun Yazıldığı Tarih":" ".join(review.find("span", {"data-hook":"review-date"}).text.split()[1:4])
@@ -305,15 +309,21 @@ def amazon_scraper():
         file = input("Oluşturulacak Excel dosyasının adı: ") + ".xlsx"
 
         current_page = 1
-        length_of_pages = get_length_of_pages()
 
-        while current_page <= length_of_pages:
-            page_url = page_url[:len(page_url)-2] + str(current_page)
+        while True:
+            if current_page == 1:
+                page_url = page_url + str("&reviewerType=all_reviews&pageNumber=") + str(current_page)
+            else:
+                page_url = page_url[:len(page_url)-1] + str(current_page)
             soup = get_soup(page_url)
+            print(page_url)
             print("Veriler çekiliyor...")
             print("Sayfa: " + str(current_page))
             get_reviews(soup)
             current_page += 1
+            length_of_pages = get_length_of_pages()
+            if current_page > length_of_pages:
+                break
 
         list_to_excel(review_list)
         x = "Çektiğiniz veriler " + file + " adlı excel dosyasına kaydedildi."

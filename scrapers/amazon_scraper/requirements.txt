@@ -1,2 +1,4 @@
+beautifulsoup4==4.9.1
+numpy==1.18.5
 pandas==1.1.4
 selenium==3.141.0
