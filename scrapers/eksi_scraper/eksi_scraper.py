@@ -8,23 +8,20 @@ from selenium.webdriver.common.keys import Keys
 def eksisozluk_scrape():
     def initialize():
         def preference(scrape_input, question):
-            while (scrape_input.lower() != "y") or (scrape_input.lower() != "n"):
-                if scrape_input.lower() == "y":
-                    output = True
-                    break
+            scrape_input = scrape_input.lower()
+            
+            while scrape_input not in ("y", "n"):
+                print("Geçersiz yanıt.")
+                scrape_input = input(question).lower()
+                
+            else:
+                if scrape_input == "y":
+                    return True
+                return False
 
-                elif scrape_input.lower() == "n":
-                    output = False
-                    break
-
-                else:
-                    print("Geçersiz yanıt.")
-                    scrape_input = input(question) 
-
-            return output
 
         def delay_check(delay):
-            while type(delay) != int:
+            while not isinstance(delay, int):
                 try:
                     delay = int(delay)
                 except ValueError:
@@ -44,7 +41,7 @@ def eksisozluk_scrape():
 
         title = input("Entrylerin çekileceği başlık: ")
         file = input("Oluşturulacak Excel dosyasının adı: ")
-        file = file + ".xlsx"
+        file += ".xlsx"
         delay = delay_check(input("Bekleme süresi(sn): "))
 
         entry_texts = []
